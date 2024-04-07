@@ -1,1 +1,63 @@
+//Time to search for the errors in the following code
 
+// HINT! There are 4 total errors in the code, but all of you have access to the correct code from class 3_8,
+// and online in presentation "advanced_030824_gee" posted on The Spring. We recommend pulling up that presentation
+// to cross-reference while you are finding the code errors!
+
+//SEARCH FOR THE ERRORS AND THEN UPLOAD BACK INTO YOUR GROUP'S CLOUD MASK CODE :)
+var imageCollection = ee.ImageCollection("LANDSAT/LC08/C02/T1_TOA"),
+    geometry = 
+    /* color: #ffc82d */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-73.60824877104832, 43.253680286639096],
+          [-73.60824877104832, 42.47662992898569],
+          [-72.55905443511082, 42.47662992898569],
+          [-72.55905443511082, 43.253680286639096]]], null, false);
+
+var imageCollection = ee.ImageCollection("LANDSAT/LC08/C02/T1_TOA"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-104.86796875, 39.04879462834871],
+          [-104.86796875, 38.224974683387785],
+          [-103.2859375, 38.224974683387785],
+          [-103.2859375, 39.04879462834871]]], null, false);
+          
+var lscol1 =imageCollection.filterBounds(geometry) //here is our first error lscoll is lscol1
+            .filterDate('2023-06-15','2023-10-01')
+            .filter(ee.Filter.lt('CLOUD_COVER', 10))
+            
+print(lscoll)
+
+var lsFirst =lscoll.first();
+
+print(lsFirst);
+
+var maskClouds = function(image) {
+  var scored= ee.Algorithms.Landsat.simpleCloudScore(image);
+  return image.updateMask(scored.select(['cloud']).lt(20))
+};
+
+var lsMask = lscoll.map(maskclouds) /// should be maskClouds not maskclouds
+var lscomp=lsMask.median().clip(geometry)
+
+Map.addLayer(lscomp, {bands:['B2', 'B3', 'B4'], max:0.2284, gamma: 1.6}, "Landsat 8 Composite 2023",true) // swapped bands B2 and B4
+
+Map.centerObject(geometry, 1) // swapped 7 for 1 to zoom all the way out
+
+var title=ui.Label({value:"Cloud Free Imagery",
+style:{fontWeight: 'bold', fontSize:'24px'}})
+
+Map.add(title)
