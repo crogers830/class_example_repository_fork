@@ -20,11 +20,11 @@ var imageCollection = ee.ImageCollection("LANDSAT/LC08/C02/T1_TOA"),
           [-72.55905443511082, 42.47662992898569],
           [-72.55905443511082, 43.253680286639096]]], null, false);
           
-var lscoll =imageCollection.filterBounds(geometry) 
+var lscoll =imageCollection.filterBounds(geometry)
             .filterDate('2023-06-15','2023-10-01')
             .filter(ee.Filter.lt('CLOUD_COVER', 10))
             
-print(lscoll)
+print(lscol1)
 
 var lsFirst =lscoll.first();
 
@@ -35,12 +35,12 @@ var maskClouds = function(image) {
   return image.updateMask(scored.select(['cloud']).lt(20))
 };
 
-var lsMask = lscoll.map(maskClouds) 
+var lsMask = lscoll.map(maskclouds) 
 var lscomp=lsMask.median().clip(geometry)
 
-Map.addLayer(lscomp, {bands:['B4', 'B3', 'B2'], max:0.2284, gamma: 1.6}, "Landsat 8 Composite 2023",true) 
+Map.addLayer(lscomp, {bands:['B2', 'B3', 'B4'], max:0.2284, gamma: 1.6}, "Landsat 8 Composite 2023",true) 
 
-Map.centerObject(geometry, 9) 
+Map.centerObject(geometry, 1) 
 
 var title=ui.Label({value:"Cloud Free Imagery",
 style:{fontWeight: 'bold', fontSize:'24px'}})
