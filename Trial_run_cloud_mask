@@ -19,21 +19,6 @@ var imageCollection = ee.ImageCollection("LANDSAT/LC08/C02/T1_TOA"),
           [-73.60824877104832, 42.47662992898569],
           [-72.55905443511082, 42.47662992898569],
           [-72.55905443511082, 43.253680286639096]]], null, false);
-
-var imageCollection = ee.ImageCollection("LANDSAT/LC08/C02/T1_TOA"),
-    geometry = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-104.86796875, 39.04879462834871],
-          [-104.86796875, 38.224974683387785],
-          [-103.2859375, 38.224974683387785],
-          [-103.2859375, 39.04879462834871]]], null, false);
           
 var lscol1 =imageCollection.filterBounds(geometry) //here is our first error lscoll is lscol1
             .filterDate('2023-06-15','2023-10-01')
